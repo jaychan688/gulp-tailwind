@@ -1,4 +1,5 @@
 import gulp from 'gulp'
+const $ = require('gulp-load-plugins')()
 import postcss from 'gulp-postcss'
 import cssvars from 'postcss-simple-vars'
 import nested from 'tailwindcss/nesting'
@@ -10,27 +11,37 @@ import del from 'del'
 const source = './src/'
 const dest = './dist/'
 
-function html() {
+function copyHTML() {
 	return gulp.src(source + '**/*.html').pipe(gulp.dest(dest))
 }
-// function html() {
-// 	return gulp.src(dest + '**/*.html')
-// }
+
+function copy() {
+	return gulp
+		.src([
+			`${source}**/**`,
+			`!${source}js/**/**`,
+			`!${source}css/**/**`,
+			`!${source}**/*.html`,
+		])
+		.pipe(gulp.dest(dest))
+}
 
 function styles() {
 	return gulp
 		.src(source + '**/*.css')
+		.pipe($.sourcemaps.init())
 		.pipe(postcss([cssImport, cssvars, nested, tailwind, autoprefixer]))
+		.pipe($.sourcemaps.write('.'))
 		.pipe(gulp.dest(dest))
 }
 
-export function clean() {
-	return del(['/dist'])
+function clean() {
+	return del(['./dist'])
 }
 
 function watch() {
 	gulp.watch(source + 'css/**/*.css', styles).on('change', browserSync.reload)
-	gulp.watch(dest + 'index.html', html).on('change', browserSync.reload)
+	gulp.watch(source + '**/*.html', copyHTML).on('change', browserSync.reload)
 	gulp
 		.watch(
 			['./tailwind.config.js', './postcss.config.js', './gulpfile.js'],
@@ -49,5 +60,11 @@ function server() {
 	watch()
 }
 
-var build = gulp.series(gulp.parallel(clean, styles, html), server, watch)
+var build = gulp.series(
+	clean,
+	gulp.parallel(copy, copyHTML, styles),
+	server,
+	watch
+)
+
 gulp.task('default', build)
