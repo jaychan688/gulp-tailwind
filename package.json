@@ -1,0 +1,25 @@
+{
+	"name": "tailwind",
+	"version": "1.0.0",
+	"description": "Repository for my course on Tailwind CSS",
+	"license": "ISC",
+	"scripts": {
+		"start": "gulp"
+	},
+	"devDependencies": {
+		"@babel/core": "^7.15.0",
+		"@babel/preset-env": "^7.15.0",
+		"@babel/register": "^7.14.5",
+		"autoprefixer": "^10.3.1",
+		"browser-sync": "^2.27.5",
+		"cssnano": "^5.0.7",
+		"del": "^6.0.0",
+		"gulp": "^4.0.2",
+		"gulp-postcss": "^9.0.0",
+		"postcss": "^8.3.6",
+		"postcss-import": "^14.0.2",
+		"postcss-nested": "^5.0.6",
+		"postcss-simple-vars": "^6.0.3",
+		"tailwindcss": "^2.2.7"
+	}
+}
